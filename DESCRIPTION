@@ -1,7 +1,7 @@
 Package: scWGCNA
 Type: Package
 Title: scWGCNA
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: 
     person(given = "Miles",
            family = "Smith",
@@ -30,7 +30,9 @@ Imports:
     stats,
     SummarizedExperiment,
     purrr,
-    patchwork
+    tibble,
+    patchwork,
+    YSX
 Remotes:
     github::satijalab/seurat@release/3.0,
     github::milescsmith/seuratBubblePlot,
