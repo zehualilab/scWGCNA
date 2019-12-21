@@ -202,6 +202,7 @@ scWGCNA <- function(object,
                              guideHang = 0.05,
                              main = "Gene dendrogram and module colors"
                              )
+  print(pdc)
 
   # set the diagonal of the dissimilarity to NA
   # diag(dissTOM) <- NA
