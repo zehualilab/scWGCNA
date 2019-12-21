@@ -21,19 +21,21 @@
 #' @param merge_similar_modules Should similar modules be merged? Default: FALSE
 #' @param merge_similarity_threshold Dissimilarity (i.e., 1-correlation) cutoff
 #' used to determine if modules should be merged. Default: 0.25
+#' @param nThreads nThreads
 #'
 #' @importFrom dplyr filter na_if
 #' @importFrom ggplot2 ggplot geom_text geom_hline theme labs geom_text aes
 #' @importFrom cowplot plot_grid
 #' @importFrom WGCNA pickSoftThreshold adjacency TOMsimilarityFromExpr TOMsimilarity
 #' labels2colors plotDendroAndColors TOMplot bicor allowWGCNAThreads goodSamplesGenes
-#' mergeCloseModules moduleEigengenes
+#' mergeCloseModules moduleEigengenes enableWGCNAThreads
 #' @importFrom flashClust flashClust hclust
 #' @importFrom dynamicTreeCut cutreeDynamic
 #' @importFrom stats as.dist
 #' @importFrom glue glue
 #' @importFrom stringr str_remove
 #' @importFrom SeuratBubblePlot DetectionRate
+#' @importFrom tibble column_to_rownames
 #'
 #' @return
 #' @export
@@ -49,8 +51,18 @@ scWGCNA <- function(object,
                     assay_use = NULL,
                     slot_use = NULL,
                     merge_similar_modules = FALSE,
-                    merge_similarity_threshold = 0.25) {
+                    merge_similarity_threshold = 0.25,
+                    nThreads = nThreads) {
 
+  options(stringsAsFactors = FALSE)
+  
+  if (Sys.info()['sysname'] == "Linux"){
+  enableWGCNAThreads(nThreads = nThreads)
+  } else {
+  # if mac
+  allowWGCNAThreads(nThreads = nThreads)
+  }
+  
   object_data <- GatherData(object = object,
                          assay = assay_use,
                          slot_use = slot_use) %>%
@@ -133,7 +145,8 @@ scWGCNA <- function(object,
     ) +
     theme(legend.position = "none")
 
-  plot_grid(topology.fit.index, mean.connect)
+  figure1 <- plot_grid(topology.fit.index, mean.connect)
+  print(figure1)
 
   if (max(sft$fitIndices$SFT.R.sq) >= 0.8) {
     sft.values <- sft$fitIndices %>%
