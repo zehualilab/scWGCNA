@@ -33,6 +33,7 @@
 #' @importFrom stats as.dist
 #' @importFrom glue glue
 #' @importFrom stringr str_remove
+#' @importFrom SeuratBubblePlot DetectionRate
 #'
 #' @return
 #' @export
